@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<title>Login TodoList</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+
+	<br />
+	<div class="container">
+		<div class="panel panel-primary">
+			<div class="panel-heading"><h2>Page de connexion TodoList</h2></div>
+			<br/>
+			<div class="panel-body">
+				<form th:action="@{connexion}" method="POST">
+					<div>
+						<label class="control-label">Email :</label>
+						<input class="form-control" type="text" name="email" />
+					</div>
+					<div>
+						<label class="control-label">Password :</label>
+						<input class="form-control" type="text" name="password" />
+					</div><br/>
+					<div>
+						<button type="submit" class="btn btn-primary">Login</button>
+						<a th:href="@{ajout}" class="btn btn-warning">Création Profil</a>
+					</div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+
+</body>
+</html>

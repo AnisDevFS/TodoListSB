@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<title>Connected</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+
+	<br />
+	<div class="container">
+		<div class="panel panel-primary">
+			<div class="panel-heading"><h2>Page Connected affichée
+			<br>
+			<span th:text="${connectedUser.nom}" />
+			<span th:utext="${connectedUser.nom}" />
+			</h2></div>
+			<br/>
+		
+		</div>
+	</div>
+
+</body>
+</html>
