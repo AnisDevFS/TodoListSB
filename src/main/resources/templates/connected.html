@@ -31,6 +31,9 @@
 						th:value="${mc}" />
 					<button class="btn btn-primary">Chercher</button>
 				</form>
+				<a class="btn btn-primary"
+				th:href="@{addTache(idConnectedUser=${connectedUser.id_user})}">
+					<i class="far fa-plus-square"></i></a>
 
 			</div> <br>
 		</div>
@@ -66,6 +69,10 @@
 			</div>
 			<h5 class="text-danger" th:case="*">Aucune tache</h5>
 		</div>
+		<br>
+		<div th:if="${newTache != null}" >tache : 
+		<span class="text-info" th:text="${newTache.texte}"></span> ajoutée</div>
+		
 	</div>
 </body>
 </html>

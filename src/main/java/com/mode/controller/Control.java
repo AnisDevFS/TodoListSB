@@ -2,9 +2,12 @@ package com.mode.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,6 +40,16 @@ public class Control {
 	@RequestMapping(value = "/ajout")
 	public String goToAjoutForm() {
 		return "ajoutForm";
+	}
+	
+	@RequestMapping(value = "/acceuil", method = RequestMethod.GET)
+	public String accueil(Model model,
+		int idConnectedUser) {
+		User connectedUser = uR.getById(idConnectedUser);
+		if (connectedUser != null)
+			return connexion(model, connectedUser.getEmail(), connectedUser.getPassword());
+		else
+			return home();
 	}
 	
 	@RequestMapping(value = "/connexion" , method=RequestMethod.POST)
@@ -91,6 +104,19 @@ public class Control {
 		return "connected";
 	}
 	
+	@RequestMapping(value = "/addTache")
+	public String frmNewCmd(Model model, int idConnectedUser) {
+
+		User connectedUser = uR.getById(idConnectedUser);
+		if (connectedUser != null) {
+
+			model.addAttribute("idConnectedUser", idConnectedUser);		
+
+			return "ajoutTache";
+		} else
+			return home();
+	}
+	
 	
 	
 	@RequestMapping(value = "/creerProfil" , method=RequestMethod.POST)
@@ -107,6 +133,40 @@ public class Control {
 		uR.save(newUser);
 		model.addAttribute("connectedUser", newUser);
 		return "connected";
+	}
+	
+	
+	
+	@RequestMapping(value = "/saveTache", method = RequestMethod.POST)
+	public String saveCmd(Model model, 
+			int idConnectedUser, 
+			@Valid Tache tache,
+			BindingResult bindingRes) {
+		System.out.println("dans la mehtod save");
+		System.out.println(bindingRes.toString());
+				
+		if (bindingRes.hasErrors()) {
+			System.out.println("J'ai des erreurs dans la saisie");
+			model.addAttribute("newTache", tache);
+			model.addAttribute("idConnectedUser", idConnectedUser);
+			return "ajoutTache";
+		}
+		
+		User connectedUser =  uR.getById(idConnectedUser);
+
+		if (connectedUser != null) {
+
+			tache.setUser(connectedUser);
+ 
+			System.out.println(tache.toString());
+			tR.save(tache);
+			model.addAttribute("idConnectedUser", idConnectedUser);
+			model.addAttribute("newTache", tache);
+//			return "viewConfirmationTache";
+			return connexion(model, connectedUser.getEmail(), connectedUser.getPassword());
+			
+		} else
+			return home();
 	}
 
 }

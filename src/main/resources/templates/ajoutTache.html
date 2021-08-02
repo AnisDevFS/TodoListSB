@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<title>Ajout Tache TodoList</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+</head>
+<body>
+
+	<br />
+	<div class="container">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h2>Page d'Ajout d'une Tache TodoList</h2>
+			</div>
+			<br />
+			<div class="panel-body">
+				<form th:action="@{saveTache(idConnectedUser=${idConnectedUser})}"
+					method="POST">
+
+					<div>
+						<label class="control-label">Texte :</label> <input
+							class="form-control" type="text" name="texte" />
+					</div>
+					<br /> 
+					<div th:if="${newTache != null}">
+					
+					<span th:errors="${newTache.texte}"></span> <br></div>
+					<div>
+						<button type="submit" class="btn btn-primary">Ajouter
+							Tache</button>
+					</div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+
+</body>
+</html>
