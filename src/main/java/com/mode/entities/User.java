@@ -91,8 +91,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id_user=" + id_user + ", nom=" + nom + ", email=" + email + ", age=" + age + ", taches=" + taches
-				+ "]";
+		return "User [id_user=" + id_user + ", nom=" + nom + ", email=" + email + ", age=" + age + "]";
 	}
 
 	public void addTache(Tache tache) {

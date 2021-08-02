@@ -55,7 +55,7 @@ public class Tache {
 
 	@Override
 	public String toString() {
-		return "Tache [id_tache=" + id_tache + ", texte=" + texte + ", user=" + user + "]";
+		return "Tache [id_tache=" + id_tache + ", texte=" + texte + "]";
 	}
 
 }

@@ -3,22 +3,69 @@
 <head>
 <meta charset="utf-8" />
 <title>Connected</title>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+	integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
 
 	<br />
 	<div class="container">
 		<div class="panel panel-primary">
-			<div class="panel-heading"><h2>Page Connected affichée
+			<div class="panel-heading">
+				<h2>
+				<span
+						th:text="${connectedUser.nom}" /> connécté(e)
+				</h2>
+			</div>
 			<br>
-			<span th:text="${connectedUser.nom}" />
-			<span th:utext="${connectedUser.nom}" />
-			</h2></div>
-			<br/>
-		
+			<div class="container col-offset-md-1">
+				<form th:action="@{index(idConnectedUser=${connectedUser.id_user})}"
+					method="POST">
+					<label>Mot clé :</label> <input type="text" name="mc"
+						th:value="${mc}" />
+					<button class="btn btn-primary">Chercher</button>
+				</form>
+
+			</div> <br>
+		</div>
+
+		<h4>Les Taches de cet utilisateur</h4>
+
+		<div th:switch="${listTaches.size()>0}">
+			<div th:case="${true}">
+				<table class="table">
+					<thead class="thead-dark">
+						<tr>
+							<th scope="col">Texte</th>
+							<th scope="col">Suppression</th>
+							<th scope="col">Edition</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="tache:${listTaches}">
+							<td th:text="${tache.texte}"></td>
+							<td><a class="btn btn-danger"
+								onclick="return confirm('Etes vous sure de supprimer cette commande ?')"
+								th:href="@{deleteCmd(connectedUser=${connectedUser},id_tache=${tache.id_tache})}">
+									<i class="far fa-trash-alt"></i>
+							</a></td>
+							<td><a class="btn btn-warning"
+								th:href="@{editCmd(connectedUser=${connectedUser},id_tache=${tache.id_tache})}">
+									<i class="fas fa-edit"></i>
+							</a></td>
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
+			<h5 class="text-danger" th:case="*">Aucune tache</h5>
 		</div>
 	</div>
-
 </body>
 </html>

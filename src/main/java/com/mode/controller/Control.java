@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.mode.entities.Tache;
 import com.mode.entities.User;
+import com.mode.repositories.TacheRepo;
 import com.mode.repositories.UserRepo;
 
 
@@ -18,6 +20,9 @@ public class Control {
 	
 	@Autowired
 	private UserRepo uR;
+	
+	@Autowired
+	private TacheRepo tR;
 	
 	@RequestMapping(value = "/login" , method=RequestMethod.GET)
 	public String login() {
@@ -49,6 +54,7 @@ public class Control {
 			if (user.getEmail().equals(email) && user.getPassword().equals(password)) {
 				UserExist = true;
 				model.addAttribute("connectedUser", user);
+				model.addAttribute("listTaches", user.getTaches());
 			}
 				
 		}
@@ -58,7 +64,32 @@ public class Control {
 	}
 	
 	
-	
+	@RequestMapping(value = "/index" , method = RequestMethod.POST)
+	public String index(Model model , 
+	int idConnectedUser,
+	@RequestParam(name = "mc") String mc) {
+		
+		User connectedUser = uR.getById(idConnectedUser);
+		System.out.println(connectedUser);
+		List<Tache> tachesOfCU = connectedUser.getTaches();
+		
+		if (mc.length() == 0 || mc.equals(null)) {
+			System.out.println(tachesOfCU.size() + "mc.length() == 0");
+
+			model.addAttribute("listTaches", tachesOfCU);
+		}
+		else {
+			List<Tache> tachesTrouvees = tR.chercher("%"+mc.toLowerCase()+"%" , connectedUser.getId_user());
+			System.out.println(tachesTrouvees.size() + "mc.length() != 0");
+			System.out.println(mc);
+			System.out.println(tachesTrouvees);
+			model.addAttribute("listTaches", tachesTrouvees);
+		}
+		
+		model.addAttribute("mc", mc);
+		model.addAttribute("connectedUser", connectedUser);
+		return "connected";
+	}
 	
 	
 	
