@@ -55,11 +55,11 @@
 							<td th:text="${tache.texte}"></td>
 							<td><a class="btn btn-danger"
 								onclick="return confirm('Etes vous sure de supprimer cette commande ?')"
-								th:href="@{deleteCmd(connectedUser=${connectedUser},id_tache=${tache.id_tache})}">
+								th:href="@{suppTache(idConnectedUser=${connectedUser.id_user},id_tache=${tache.id_tache})}">
 									<i class="far fa-trash-alt"></i>
 							</a></td>
 							<td><a class="btn btn-warning"
-								th:href="@{editCmd(connectedUser=${connectedUser},id_tache=${tache.id_tache})}">
+								th:href="@{editTache(idConnectedUser=${connectedUser.id_user},id_tache=${tache.id_tache})}">
 									<i class="fas fa-edit"></i>
 							</a></td>
 						</tr>

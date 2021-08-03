@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<title>modification Tache TodoList</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+</head>
+<body>
+
+	<br />
+	<div class="container">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h2>Page de modification d'une Tache TodoList</h2>
+			</div>
+			<br />
+			<div class="panel-body">
+				<form th:action="@{saveModifTache(idConnectedUser=${idConnectedUser} 
+									, id_tache=${TacheToEdit.id_tache})}"
+					method="POST">
+
+					<div>
+						<label class="control-label">Texte à modifier:</label> <input
+							class="form-control" type="text" name="texte" 
+							th:value="${TacheToEdit.texte}" />
+					</div>
+					<br>
+					<div th:if="${erreur != null}">
+					
+					<span class="text-danger" th:text="${erreur}"></span> <br></div>
+					<div>
+						<button type="submit" class="btn btn-warning">modifier
+							Tache</button>
+					</div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+
+</body>
+</html>

@@ -174,5 +174,82 @@ public class Control {
 		} else
 			return home();
 	}
+	
+	@RequestMapping(value = "/suppTache", method = RequestMethod.GET)
+	public String delete(Model model,
+						int idConnectedUser ,
+						int id_tache) {
+
+		tR.deleteById(id_tache);
+		User connectedUser = uR.findById(idConnectedUser).get(); // uR.findById(idConnectedUser) retourne un Optional<User>
+		// User connectedUser = uR.getbyId(idConnectedUser);
+		
+		if (connectedUser != null) {
+			model.addAttribute("connectedUser", connectedUser);
+			return connexion(model, connectedUser.getEmail(), connectedUser.getPassword());
+		} else
+			return home();
+	}
+	
+	
+	
+	@RequestMapping(value = "/editTache", method = RequestMethod.GET)
+	public String editCmd(	Model model,
+							int idConnectedUser ,
+							int id_tache) {
+
+		User connectedUser = uR.getById(idConnectedUser);
+		if (connectedUser != null) {
+			Tache TacheToEdit = tR.findById(id_tache).get();
+			if (TacheToEdit != null) {
+
+				model.addAttribute("idConnectedUser", idConnectedUser);
+				model.addAttribute("TacheToEdit", TacheToEdit);
+				return "modifTache";
+			} else
+				return connexion(model, connectedUser.getEmail(), connectedUser.getPassword());
+
+		} else
+			return home();
+	}
+	
+	
+	
+	@RequestMapping(value = "/saveModifTache", method = RequestMethod.POST)
+	public String saveCmd(Model model, 
+			int idConnectedUser, int id_tache ,
+			@Valid Tache tache,
+			BindingResult bindingRes) {
+		System.out.println("dans la mehtod save");
+		System.out.println(bindingRes.toString());
+				
+		if (bindingRes.hasErrors()) {
+			System.out.println("J'ai des erreurs dans la saisie");
+			model.addAttribute("TacheToEdit", tache);
+			model.addAttribute("idConnectedUser", idConnectedUser);
+
+			for (ObjectError error : bindingRes.getAllErrors()) {
+				System.out.println(error.getDefaultMessage());
+				model.addAttribute("erreur", error.getDefaultMessage());
+			}
+			return "modifTache";
+		}
+		
+		User connectedUser =  uR.getById(idConnectedUser);
+
+		if (connectedUser != null) {
+			
+			String newTexte = tache.getTexte();
+			tache = tR.getById(id_tache);
+			tache.setTexte(newTexte);
+ 
+			tR.save(tache);
+
+			return connexion(model, connectedUser.getEmail(), connectedUser.getPassword());
+			
+		} else
+			return home();
+	}
+	
 
 }

@@ -24,7 +24,7 @@ public class User {
 
 	private int age;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_user")
 	private List<Tache> taches = new ArrayList<Tache>();
 
