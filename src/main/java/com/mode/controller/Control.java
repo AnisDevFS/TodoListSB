@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -111,7 +112,7 @@ public class Control {
 		if (connectedUser != null) {
 
 			model.addAttribute("idConnectedUser", idConnectedUser);		
-
+			model.addAttribute("newTache", null);
 			return "ajoutTache";
 		} else
 			return home();
@@ -149,6 +150,11 @@ public class Control {
 			System.out.println("J'ai des erreurs dans la saisie");
 			model.addAttribute("newTache", tache);
 			model.addAttribute("idConnectedUser", idConnectedUser);
+
+			for (ObjectError error : bindingRes.getAllErrors()) {
+				System.out.println(error.getDefaultMessage());
+				model.addAttribute("erreur", error.getDefaultMessage());
+			}
 			return "ajoutTache";
 		}
 		

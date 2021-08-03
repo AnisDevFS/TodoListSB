@@ -23,12 +23,13 @@
 
 					<div>
 						<label class="control-label">Texte :</label> <input
-							class="form-control" type="text" name="texte" />
+							class="form-control" type="text" name="texte" 
+							th:value="${newTache != null} ? ${newTache.texte} : ''" />
 					</div>
-					<br /> 
-					<div th:if="${newTache != null}">
+					<br>
+					<div th:if="${erreur != null}">
 					
-					<span th:errors="${newTache.texte}"></span> <br></div>
+					<span class="text-danger" th:text="${erreur}"></span> <br></div>
 					<div>
 						<button type="submit" class="btn btn-primary">Ajouter
 							Tache</button>
