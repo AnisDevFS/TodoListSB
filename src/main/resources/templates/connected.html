@@ -19,8 +19,11 @@
 		<div class="panel panel-primary">
 			<div class="panel-heading">
 				<h2>
-				<span
-						th:text="${connectedUser.nom}" /> connécté(e)
+					<span th:text="${connectedUser.nom}" /> connécté(e) <a
+						class="btn btn-info"
+						th:href="@{addTache(idConnectedUser=${connectedUser.id_user})}">
+						<i class="fas fa-user-edit"></i> Coordoonées Profil
+					</a>
 				</h2>
 			</div>
 			<br>
@@ -29,17 +32,22 @@
 					method="POST">
 					<label>Mot clé :</label> <input type="text" name="mc"
 						th:value="${mc}" />
-					<button class="btn btn-primary">Chercher</button>
+					<button class="btn btn-primary">
+						<i class="fas fa-search"></i> Chercher
+					</button>
 				</form>
-				<a class="btn btn-primary"
-				th:href="@{addTache(idConnectedUser=${connectedUser.id_user})}">
-					<i class="far fa-plus-square"></i></a>
 
-			</div> <br>
+
+			</div>
+			<br>
+
 		</div>
 
 		<h4>Les Taches de cet utilisateur</h4>
-
+		<br /> <a class="btn btn-primary"
+			th:href="@{addTache(idConnectedUser=${connectedUser.id_user})}">
+			<i class="far fa-plus-square"></i> Tache
+		</a> <br>
 		<div th:switch="${listTaches.size()>0}">
 			<div th:case="${true}">
 				<table class="table">
@@ -70,9 +78,15 @@
 			<h5 class="text-danger" th:case="*">Aucune tache</h5>
 		</div>
 		<br>
-		<div th:if="${newTache != null}" >tache : 
-		<span class="text-info" th:text="${newTache.texte}"></span> ajoutée</div>
-		
+		<div th:if="${newTache != null}">
+			tache : <span class="text-info" th:text="${newTache.texte}"></span>
+			ajoutée
+		</div>
+		<div th:if="${TacheToEdit != null}">
+			tache : <span class="text-info" th:text="${TacheToEdit.texte}"></span>
+			modifiée
+		</div>
+
 	</div>
 </body>
 </html>

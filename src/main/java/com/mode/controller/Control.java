@@ -244,7 +244,7 @@ public class Control {
 			tache.setTexte(newTexte);
  
 			tR.save(tache);
-
+			model.addAttribute("TacheToEdit", tache);
 			return connexion(model, connectedUser.getEmail(), connectedUser.getPassword());
 			
 		} else
