@@ -18,50 +18,46 @@ import com.mode.entities.User;
 import com.mode.repositories.TacheRepo;
 import com.mode.repositories.UserRepo;
 
-
 @Controller
 public class Control {
-	
+
 	@Autowired
 	private UserRepo uR;
-	
+
 	@Autowired
 	private TacheRepo tR;
-	
-	@RequestMapping(value = "/login" , method=RequestMethod.GET)
+
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login() {
 		return "connexion";
 	}
-	
+
 	@RequestMapping(value = "/")
 	public String home() {
 		return "redirect:/login";
 	}
-	
+
 	@RequestMapping(value = "/ajout")
 	public String goToAjoutForm() {
 		return "ajoutForm";
 	}
-	
+
 	@RequestMapping(value = "/acceuil", method = RequestMethod.GET)
-	public String accueil(Model model,
-		int idConnectedUser) {
+	public String accueil(Model model, int idConnectedUser) {
 		User connectedUser = uR.getById(idConnectedUser);
 		if (connectedUser != null)
 			return connexion(model, connectedUser.getEmail(), connectedUser.getPassword());
 		else
 			return home();
 	}
-	
-	@RequestMapping(value = "/connexion" , method=RequestMethod.POST)
-	public String connexion(
-			Model model , 
-			@RequestParam(name = "email", defaultValue="")  String email ,
-			@RequestParam(name = "password", defaultValue="")  String password ) {
+
+	@RequestMapping(value = "/connexion", method = RequestMethod.POST)
+	public String connexion(Model model, @RequestParam(name = "email", defaultValue = "") String email,
+			@RequestParam(name = "password", defaultValue = "") String password) {
 //		String username = request.getParametres("username") ce qu'on fait avant
-		
+
 //		model.addAttribute("username", username);
-		System.out.println("--------------" +email);
+		System.out.println("--------------" + email);
 		List<User> users = uR.findAll();
 		boolean UserExist = false;
 		for (User user : users) {
@@ -70,82 +66,70 @@ public class Control {
 				model.addAttribute("connectedUser", user);
 				model.addAttribute("listTaches", user.getTaches());
 			}
-				
+
 		}
 		if (UserExist)
-		return "connected";
-		else return "redirect:/login";
+			return "connected";
+		else
+			return "redirect:/login";
 	}
-	
-	
-	@RequestMapping(value = "/index" , method = RequestMethod.POST)
-	public String index(Model model , 
-	int idConnectedUser,
-	@RequestParam(name = "mc") String mc) {
-		
+
+	@RequestMapping(value = "/index", method = RequestMethod.POST)
+	public String index(Model model, int idConnectedUser, @RequestParam(name = "mc") String mc) {
+
 		User connectedUser = uR.getById(idConnectedUser);
 		System.out.println(connectedUser);
 		List<Tache> tachesOfCU = connectedUser.getTaches();
-		
+
 		if (mc.length() == 0 || mc.equals(null)) {
 			System.out.println(tachesOfCU.size() + "mc.length() == 0");
 
 			model.addAttribute("listTaches", tachesOfCU);
-		}
-		else {
-			List<Tache> tachesTrouvees = tR.chercher("%"+mc.toLowerCase()+"%" , connectedUser.getId_user());
+		} else {
+			List<Tache> tachesTrouvees = tR.chercher("%" + mc.toLowerCase() + "%", connectedUser.getId_user());
 			System.out.println(tachesTrouvees.size() + "mc.length() != 0");
 			System.out.println(mc);
 			System.out.println(tachesTrouvees);
 			model.addAttribute("listTaches", tachesTrouvees);
 		}
-		
+
 		model.addAttribute("mc", mc);
 		model.addAttribute("connectedUser", connectedUser);
 		return "connected";
 	}
-	
+
 	@RequestMapping(value = "/addTache")
 	public String frmNewCmd(Model model, int idConnectedUser) {
 
 		User connectedUser = uR.getById(idConnectedUser);
 		if (connectedUser != null) {
 
-			model.addAttribute("idConnectedUser", idConnectedUser);		
+			model.addAttribute("idConnectedUser", idConnectedUser);
 			model.addAttribute("newTache", null);
 			return "ajoutTache";
 		} else
 			return home();
 	}
-	
-	
-	
-	@RequestMapping(value = "/creerProfil" , method=RequestMethod.POST)
-	public String creerProfil(
-			Model model , 
-			@RequestParam(name = "nom", defaultValue="")  String nom ,
-			@RequestParam(name = "password", defaultValue="")  String password ,
-			@RequestParam(name = "email", defaultValue="")  String email ,
-			@RequestParam(name = "age", defaultValue="")  int age) {
-		
-		System.out.println("--------------" +nom);
-		
+
+	@RequestMapping(value = "/creerProfil", method = RequestMethod.POST)
+	public String creerProfil(Model model, @RequestParam(name = "nom", defaultValue = "") String nom,
+			@RequestParam(name = "password", defaultValue = "") String password,
+			@RequestParam(name = "email", defaultValue = "") String email,
+			@RequestParam(name = "age", defaultValue = "") int age) {
+
+		System.out.println("--------------" + nom);
+
 		User newUser = new User(nom, email, password, age);
 		uR.save(newUser);
 		model.addAttribute("connectedUser", newUser);
 		return "connected";
 	}
-	
-	
-	
+
 	@RequestMapping(value = "/saveTache", method = RequestMethod.POST)
-	public String saveCmd(Model model, 
-			int idConnectedUser, 
-			@Valid Tache tache,
-			BindingResult bindingRes) {
+	public String saveCmd(Model model, int idConnectedUser, @Valid Tache tache, BindingResult bindingRes) {
 		System.out.println("dans la mehtod save");
 		System.out.println(bindingRes.toString());
-				
+
 		if (bindingRes.hasErrors()) {
 			System.out.println("J'ai des erreurs dans la saisie");
 			model.addAttribute("newTache", tache);
@@ -157,46 +141,41 @@ public class Control {
 			}
 			return "ajoutTache";
 		}
-		
-		User connectedUser =  uR.getById(idConnectedUser);
+
+		User connectedUser = uR.getById(idConnectedUser);
 
 		if (connectedUser != null) {
 
 			tache.setUser(connectedUser);
- 
+
 			System.out.println(tache.toString());
 			tR.save(tache);
 			model.addAttribute("idConnectedUser", idConnectedUser);
 			model.addAttribute("newTache", tache);
 //			return "viewConfirmationTache";
 			return connexion(model, connectedUser.getEmail(), connectedUser.getPassword());
-			
+
 		} else
 			return home();
 	}
-	
+
 	@RequestMapping(value = "/suppTache", method = RequestMethod.GET)
-	public String delete(Model model,
-						int idConnectedUser ,
-						int id_tache) {
+	public String delete(Model model, int idConnectedUser, int id_tache) {
 
 		tR.deleteById(id_tache);
-		User connectedUser = uR.findById(idConnectedUser).get(); // uR.findById(idConnectedUser) retourne un Optional<User>
+		User connectedUser = uR.findById(idConnectedUser).get(); // uR.findById(idConnectedUser) retourne un
+																	// Optional<User>
 		// User connectedUser = uR.getbyId(idConnectedUser);
-		
+
 		if (connectedUser != null) {
 			model.addAttribute("connectedUser", connectedUser);
 			return connexion(model, connectedUser.getEmail(), connectedUser.getPassword());
 		} else
 			return home();
 	}
-	
-	
-	
+
 	@RequestMapping(value = "/editTache", method = RequestMethod.GET)
-	public String editCmd(	Model model,
-							int idConnectedUser ,
-							int id_tache) {
+	public String editCmd(Model model, int idConnectedUser, int id_tache) {
 
 		User connectedUser = uR.getById(idConnectedUser);
 		if (connectedUser != null) {
@@ -212,17 +191,13 @@ public class Control {
 		} else
 			return home();
 	}
-	
-	
-	
+
 	@RequestMapping(value = "/saveModifTache", method = RequestMethod.POST)
-	public String saveCmd(Model model, 
-			int idConnectedUser, int id_tache ,
-			@Valid Tache tache,
+	public String saveCmd(Model model, int idConnectedUser, int id_tache, @Valid Tache tache,
 			BindingResult bindingRes) {
 		System.out.println("dans la mehtod save");
 		System.out.println(bindingRes.toString());
-				
+
 		if (bindingRes.hasErrors()) {
 			System.out.println("J'ai des erreurs dans la saisie");
 			model.addAttribute("TacheToEdit", tache);
@@ -234,22 +209,62 @@ public class Control {
 			}
 			return "modifTache";
 		}
-		
-		User connectedUser =  uR.getById(idConnectedUser);
+
+		User connectedUser = uR.getById(idConnectedUser);
 
 		if (connectedUser != null) {
-			
+
 			String newTexte = tache.getTexte();
 			tache = tR.getById(id_tache);
 			tache.setTexte(newTexte);
- 
+
 			tR.save(tache);
 			model.addAttribute("TacheToEdit", tache);
 			return connexion(model, connectedUser.getEmail(), connectedUser.getPassword());
-			
+
 		} else
 			return home();
 	}
-	
+
+	@RequestMapping(value = "/modifUser", method = RequestMethod.GET)
+	public String editCmd(Model model, int idConnectedUser) {
+
+		User connectedUser = uR.getById(idConnectedUser);
+		if (connectedUser != null) {
+
+			model.addAttribute("connectedUser", connectedUser);
+
+			return "editUserForm";
+		} else
+			return home();
+	}
+
+	@RequestMapping(value = "/modifProfil", method = RequestMethod.POST)
+	public String modifProfil(Model model, int idConnectedUser,
+			@RequestParam(name = "nom", defaultValue = "") String nom,
+			@RequestParam(name = "password", defaultValue = "") String password,
+			@RequestParam(name = "email", defaultValue = "") String email,
+			@RequestParam(name = "age", defaultValue = "") int age) {
+
+		System.out.println("--------------" + nom);
+
+		User userToEdit = uR.getById(idConnectedUser);
+		userToEdit.setAge(age);
+		userToEdit.setEmail(email);
+		userToEdit.setPassword(password);
+		userToEdit.setNom(nom);
+
+		uR.save(userToEdit);
+		model.addAttribute("connectedUser", userToEdit);
+		return connexion(model, userToEdit.getEmail(), userToEdit.getPassword());
+	}
+
+	@RequestMapping(value = "/suppUser", method = RequestMethod.GET)
+	public String delete(int idConnectedUser) {
+
+		uR.deleteById(idConnectedUser);
+
+		return home();
+	}
 
 }

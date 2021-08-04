@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<title>Modifier User TodoList</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+	integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+	<br />
+	<div class="container">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h2>Page de modif des coordoonées d'un User TodoList</h2>
+			</div>
+			<br />
+			<div class="panel-body">
+				<form
+					th:action="@{modifProfil(idConnectedUser=${connectedUser.id_user})}"
+					method="POST">
+
+					<div>
+						<label class="control-label">Nom :</label> <input
+							class="form-control" type="text" name="nom"
+							th:value="${connectedUser.nom}" />
+					</div>
+					<div>
+						<label class="control-label">Email :</label> <input
+							class="form-control" type="text" name="email"
+							th:value="${connectedUser.email}" />
+					</div>
+					<div>
+						<label class="control-label">Password :</label> <input
+							class="form-control" type="text" name="password"
+							th:value="${connectedUser.password}" />
+					</div>
+					<div>
+						<label class="control-label">Age :</label> <input
+							class="form-control" type="number" name="age"
+							th:value="${connectedUser.age}" />
+					</div>
+					<br />
+					<div>
+						<button type="submit" class="btn btn-primary">Modifier
+							Profil</button>
+					</div>
+				</form>
+			</div>
+
+		</div>
+		<br> <br> <a class="btn btn-danger"
+			onclick="return confirm('Etes vous sure de supprimer VOTRE PROFIL ?')"
+			th:href="@{suppUser(idConnectedUser=${connectedUser.id_user})}">
+			<i class="fas fa-user-times"></i> Supprimer le profil
+		</a>
+	</div>
+
+</body>
+</html>
